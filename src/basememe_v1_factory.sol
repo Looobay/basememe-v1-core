@@ -14,6 +14,7 @@ contract basememe_v1_factory {
         creator = msg.sender;
         
         deployERC20(name, symbol, maxSupply, coinPoolAmount, creatorAmount);
+        deployPool();
     }
 
     function deployERC20(string memory name, string memory symbol, uint256 maxSupply, uint256 coinPoolAmount, uint256 creatorAmount) internal {
