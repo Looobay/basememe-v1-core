@@ -13,15 +13,14 @@ contract basememe_v1_factory {
     constructor (string memory name, string memory symbol, uint256 maxSupply, uint256 coinPoolAmount, uint256 creatorAmount) {
         creator = msg.sender;
         
-        deployERC20(name, symbol, maxSupply, coinPoolAmount, creatorAmount);
-        deployPool();
+        deployAll(name, symbol, maxSupply, coinPoolAmount, creatorAmount);
     }
 
-    function deployERC20(string memory name, string memory symbol, uint256 maxSupply, uint256 coinPoolAmount, uint256 creatorAmount) internal {
-        erc20 = new basememe_v1_ERC20(name, symbol, maxSupply, address(coinpool), coinPoolAmount, creator, creatorAmount);
+    function deployAll(string memory name, string memory symbol, uint256 maxSupply, uint256 coinPoolAmount, uint256 creatorAmount) internal {
+        coinpool = new basememe_v1_coinpool(address(new basememe_v1_ERC20(name, symbol, maxSupply, address(coinpool), coinPoolAmount, creator, creatorAmount)));
     }
 
-    function deployPool() internal{
-        coinpool = new basememe_v1_coinpool(address(erc20));
+    function getCreator() public view returns (address) {
+        return creator;
     }
 }
