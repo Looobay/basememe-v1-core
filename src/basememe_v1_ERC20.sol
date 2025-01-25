@@ -5,14 +5,16 @@ import "./basememe_v1_factory.sol";
 import "./basememe_v1_coinpool.sol";
 
 /**
+*    @title basememe_v1_ERC20
+*
 *    Implement the EIP20 but for our memecoins.
 *
 *    We didn't use the ERC20 contract from OpenZeppelin
 *    because it just break my mind to use it (spaghetti code).
-*    So we wrote our own implementation lol.
+*    So we wrote our own implementation.
 *
-*    This contract need to be deployed with a factory contract.
- */
+*    This contract must be deployed with the v1 factory contract.
+*/
 contract basememe_v1_ERC20 {
     using SafeMath for uint256;
 
@@ -52,7 +54,9 @@ contract basememe_v1_ERC20 {
         _maxSupply = maxSupply_;
 
         _coinPool = pool(coinPool_);
+        mint(address(this), coinPoolAmount_);
         _coinPool.giveCoin(coinPoolAmount_);
+
         mint(creator_, creatorAmount_);
     }
 
@@ -123,9 +127,9 @@ contract basememe_v1_ERC20 {
 
     // Start of our functions outside of the EIP20 standard
 
-    // Mint function is reserved to the factory
+    // Mint function is reserved to the factory and the contract itself
     function mint(address to, uint256 amount) internal virtual {
-        require(msg.sender == factory, "basememe v1 ERC20: FORBIDDEN");
+        require(msg.sender == factory || msg.sender == address(this), "basememe v1 ERC20: FORBIDDEN");
         require(to != address(0), "basememe v1 ERC20: mint to the zero address");
         require(amount > 0, "basememe v1 ERC20: mint amount must be greater than 0");
 
